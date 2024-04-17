@@ -1,0 +1,17 @@
+<!-- Message on left side if from user -->
+{% if message.author == user %}
+<div class="d-flex justify-content-end my-2">
+    <div class="bg-primary text-white pt-3 px-2" style="border-radius: 15px; max-width: fit-content;">
+        <p>{{ message.body }}</p>
+    </div>
+</div>
+
+<!-- Message on right side if not from user -->
+{% else %}
+<div class="d-flex justify-content-start my-2">
+    <div class="bg-light text-dark pt-3 px-2" style="border-radius: 15px; max-width: fit-content;">
+        <h5>{{ message.author }}</h5>
+        <p>{{ message.body }}</p>
+    </div>
+</div>
+{% endif %}

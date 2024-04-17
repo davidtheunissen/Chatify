@@ -1,0 +1,83 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+        <!-- HTMX JavaScript library -->
+        <script src="https://unpkg.com/htmx.org@latest/dist/htmx.min.js"></script>
+
+        <!-- HTMX Websocket extension -->
+        <script src="https://unpkg.com/htmx.org/dist/ext/ws.js"></script>
+
+        <!-- Hyperscript library -->
+        <script src="https://unpkg.com/hyperscript.org@0.9.12"></script>
+
+        <title>{% block title %}{% endblock %}</title>
+    </head>
+
+    <body>
+        <!-- Navbar -->
+        <nav class="navbar bg-dark">
+            <div class="container-xxl">
+                <!-- Index item -->
+                <a href="{% url 'index' %}" class="navbar-brand">
+                    <span class="fw-bold text-white">
+                        Home
+                    </span>
+                </a>
+
+                {% if user.is_authenticated %}
+                <!-- Logout item -->
+                <a href="{% url 'logout' %}" class="navbar-brand">
+                    <span class="fw-bold text-white">
+                        Logout
+                    </span>
+                </a>
+                {% else %}
+                <!-- Login item -->
+                <a href="{% url 'login' %}" class="navbar-brand">
+                    <span class="fw-bold text-white">
+                        Login
+                    </span>
+                </a>
+                
+                <!-- Register item -->
+                <a href="{% url 'register' %}" class="navbar-brand">
+                    <span class="fw-bold text-white">
+                        Register
+                    </span>
+                </a>
+                {% endif %}
+
+            </div>
+        </nav>
+
+        <!-- Body block -->
+        <div class="container py-5">
+            {% block body %}
+
+            <!-- Display alert if there is one -->
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-warning alert-dismissable fade show" role="alert">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            {% endblock %}
+        </div>
+
+        <!-- Javascript block -->
+        {% block javascript %}
+        {% endblock %}
+    </body>
+
+</html>

@@ -1,0 +1,62 @@
+{% extends 'chat/layout.html' %}
+{% load static %}
+
+{% block title %}Chat | {{ group_name }}{% endblock %}
+
+{% block body %}
+<section>
+
+    <div class="row">
+        <div class="col-12 d-flex justify-content-center">
+
+          <!-- Card box-->
+          <div class="card bg-dark" style="border-radius: 15px; width: 100rem;">
+
+              <!-- Card Header -->
+              <div class="card-header d-flex justify-content-center text-white">
+                <h1>{{ group_name }}</h1>
+              </div>
+
+              <!-- Online count -->
+              <div class="card-header d-flex justify-content-center align-items-center py-0 text-info">
+                {% include 'chat/partials/online_count_partial.html' %}
+              </div>
+
+              <!-- Card body -->
+              <div class="card-body flex-grow-1 overflow-auto bg-dark" style="height: 80vh; border-radius: 15px;" id="chat-box">
+
+                <!-- Chat message box -->
+                <div id="chat_messages">
+                  {% for message in chat_messages reversed %}
+                    {% include 'chat/chat_message.html' %}
+                  {% endfor %}
+                </div>
+
+                <div id="chat_message_box">
+                  <!-- Message box -->
+                  <form hx-post="{% url 'group' %}" hx-ext="ws" ws-connect="/ws/group/Work" ws-send _="on htmx:wsAfterSend reset() me">
+                      {% csrf_token %}
+                      {{ form }}
+                  </form>
+                </div>
+
+              </div>
+              
+          </div>
+        </div>
+    </div>
+
+</section>
+{% endblock %}
+
+{% block javascript %}
+<script>
+
+    function scrollToBottom() {
+      const container = document.getElementById('chat-box');
+      container.scrollTop = container.scrollHeight;
+    }
+    scrollToBottom()
+
+</script>
+{% endblock %}

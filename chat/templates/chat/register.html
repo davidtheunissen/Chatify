@@ -1,0 +1,24 @@
+{% extends 'chat/layout.html' %}
+
+{% block title %}Register{% endblock %}
+
+{% load crispy_forms_tags %}
+
+{% block body %}
+
+<section id="main">
+    <h1>Create an Account</h1>
+
+    <!-- Registration form -->
+    <form action="{% url 'register' %}" method="POST">
+        {% csrf_token %}
+
+        <!-- Form with Crispy Forms -->
+        {{ form|crispy }}
+
+        <!-- Register button -->
+        <button type="submit" class="btn btn-primary">Register</button>
+    </form>
+</section>
+
+{% endblock %}
