@@ -12,15 +12,23 @@
           <!-- Card box-->
           <div class="card bg-dark" style="border-radius: 15px; width: 100rem;">
 
-              <!-- Card Header -->
-              <div class="card-header d-flex justify-content-center text-white">
-                <h1>{{ group_name }}</h1>
-              </div>
+              {% if other_user %}
+                <!-- Card Header -->
+                <div class="card-header d-flex justify-content-center text-white">
+                  <h1>{{ other_user }}</h1>
+                </div>
 
-              <!-- Online count -->
-              <div class="card-header d-flex justify-content-center align-items-center py-0 text-info">
-                {% include 'chat/partials/online_count_partial.html' %}
-              </div>
+              {% else %}
+                <!-- Card Header -->
+                <div class="card-header d-flex justify-content-center text-white">
+                  <h1>{{ group_name }}</h1>
+                </div>
+
+                <!-- Online count -->
+                <div class="card-header d-flex justify-content-center align-items-center py-0 text-info">
+                  {% include 'chat/partials/online_count_partial.html' %}
+                </div>
+              {% endif %}
 
               <!-- Card body -->
               <div class="card-body flex-grow-1 overflow-auto bg-dark" style="height: 80vh; border-radius: 15px;" id="chat-box">
@@ -34,7 +42,7 @@
 
                 <div id="chat_message_box">
                   <!-- Message box -->
-                  <form hx-post="{% url 'group' %}" hx-ext="ws" ws-connect="/ws/group/Work" ws-send _="on htmx:wsAfterSend reset() me">
+                  <form hx-post="{% url 'group' group_name=group_name %}" hx-ext="ws" ws-connect="/ws/group/{{ group_name }}" ws-send _="on htmx:wsAfterSend reset() me">
                       {% csrf_token %}
                       {{ form }}
                   </form>
@@ -48,6 +56,7 @@
 
 </section>
 {% endblock %}
+
 
 {% block javascript %}
 <script>

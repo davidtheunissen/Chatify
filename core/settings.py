@@ -73,7 +73,7 @@ CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [("localhost", 6379)],
+            "hosts": [('redis://default:ehgXzEmVeusQBHzaMQFDFAEITauTFlPq@monorail.proxy.rlwy.net:20197')],
         },
     },
 }

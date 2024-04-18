@@ -1,0 +1,29 @@
+{% extends 'chat/layout.html' %}
+
+{% block body %}
+
+<section>
+
+    <div class="row">
+        <!-- Users title -->
+        <div class="col-12">
+            <h1>Users</h1>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <!-- List of users -->
+            <ul class="list-group">
+                {% for user in users %}
+                <li class="list-group-item">
+                    <a href="{% url 'start-chatroom' username=user %}" >{{ user }}</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+</section>
+
+{% endblock %}

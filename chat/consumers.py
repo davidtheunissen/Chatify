@@ -17,10 +17,12 @@ class RoomConsumer(WebsocketConsumer):
             self.group_name, self.channel_name
         )
         
-        # Update online users' count
+        # Update online users' count and add user from 'userOnline' list
         if self.user not in self.group.usersOnline.all():
             self.group.usersOnline.add(self.user)
             self.update_online_count()
+            self.group.save()
+            
         
         self.accept()
         
@@ -32,12 +34,12 @@ class RoomConsumer(WebsocketConsumer):
             self.group_name, self.channel_name
         )
         
-        # Update online users' count
+        # Update online users' count and remove user from 'userOnline' list
         if self.user in self.group.usersOnline.all():
             self.group.usersOnline.remove(self.user)
             self.update_online_count()
+            
         
-    
     # Receive message on group and broadcast
     def receive(self, text_data):
         text_data_json = json.loads(text_data)
@@ -67,7 +69,8 @@ class RoomConsumer(WebsocketConsumer):
         # Create context dictionary
         context = {
             'message': message,
-            'author': self.user
+            'author': self.user,
+            'user': self.user
         }
         # Send text data to front end
         html = render_to_string("chat/partials/chat_message_partial.html", context=context)
@@ -76,7 +79,7 @@ class RoomConsumer(WebsocketConsumer):
         
     # Update the online count on users' screens
     def update_online_count(self):
-        online_count = self.group.usersOnline.count() -1
+        online_count = self.group.usersOnline.count() - 1
         
         event = {
             'type': 'online_count_handler',
