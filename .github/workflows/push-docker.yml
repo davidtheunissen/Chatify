@@ -1,9 +1,11 @@
-name: Build Docker
+name: Build and Push Docker
 on:
-  pull_request:
+  push:
+    branches:
+      - master
   workflow_dispatch:
 jobs:
-  chatify:
+  push-docker:
     runs-on: ubuntu-latest
     steps:
       - name: 'Checkout GitHub Action'
@@ -25,4 +27,4 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ghcr.io/${{ github.repository }}/chatify:${{ github.sha }}
+          tags: ghcr.io/${{ github.repository }}/chatify:latest
