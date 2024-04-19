@@ -1,9 +1,11 @@
-name: Build Docker
+name: Build and Push Docker
 on:
-  pull_request:
+  push:
+    branches:
+      - master
   workflow_dispatch:
 jobs:
-  chatify:
+  push-docker:
     runs-on: ubuntu-latest
     steps:
       - name: 'Checkout GitHub Action'
@@ -19,15 +21,10 @@ jobs:
           username: ${{github.actor}}
           password: ${{secrets.GITHUB_TOKEN}}
 
-      - name: Extract tag name
-        id: vars
-        shell: bash
-        run: echo "::set-output name=tag::${GITHUB_REF#refs/tags/}"
-
       - name: Build and push
         uses: docker/build-push-action@v2
         with:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ghcr.io/${{ github.repository }}/chatify:${{ steps.vars.outputs.tag }}
+          tags: ghcr.io/${{ github.repository }}/chatify:latest
