@@ -9,19 +9,19 @@ class RoomConsumer(WebsocketConsumer):
     # Connect user to group
     def connect(self):
         self.user = self.scope['user']
-        self.group_name = self.scope['url_route']['kwargs']['group_name']
-        self.group = get_object_or_404(ChatGroup, groupName=self.group_name)
+        self.room_name = self.scope['url_route']['kwargs']['room_name']
+        self.chatroom = get_object_or_404(Chatroom, name=self.room_name)
         
         # Add user to group channel layer method
         async_to_sync(self.channel_layer.group_add)(
-            self.group_name, self.channel_name
+            self.room_name, self.channel_name
         )
         
         # Update online users' count and add user from 'userOnline' list
-        if self.user not in self.group.usersOnline.all():
-            self.group.usersOnline.add(self.user)
+        if self.user not in self.chatroom.usersOnline.all():
+            self.chatroom.usersOnline.add(self.user)
             self.update_online_count()
-            self.group.save()
+            self.chatroom.save()
             
         
         self.accept()
@@ -31,12 +31,12 @@ class RoomConsumer(WebsocketConsumer):
     def disconnect(self, close_code):
         # Remove user from group channel layer method
         async_to_sync(self.channel_layer.group_discard)(
-            self.group_name, self.channel_name
+            self.room_name, self.channel_name
         )
         
         # Update online users' count and remove user from 'userOnline' list
-        if self.user in self.group.usersOnline.all():
-            self.group.usersOnline.remove(self.user)
+        if self.user in self.chatroom.usersOnline.all():
+            self.chatroom.usersOnline.remove(self.user)
             self.update_online_count()
             
         
@@ -49,7 +49,7 @@ class RoomConsumer(WebsocketConsumer):
         message = ChatMessage.objects.create(
             body = body,
             author = self.user,
-            group = self.group
+            chatroom = self.chatroom
         )
         # Create event dictionary
         event = {
@@ -58,7 +58,7 @@ class RoomConsumer(WebsocketConsumer):
         }
         # Broadcast text data to channel group
         async_to_sync(self.channel_layer.group_send)(
-            self.group_name, event
+            self.room_name, event
         )
         
     
@@ -79,14 +79,14 @@ class RoomConsumer(WebsocketConsumer):
         
     # Update the online count on users' screens
     def update_online_count(self):
-        online_count = self.group.usersOnline.count() - 1
+        online_count = self.chatroom.usersOnline.count() - 1
         
         event = {
             'type': 'online_count_handler',
             'online_count': online_count
         }
         
-        async_to_sync(self.channel_layer.group_send)(self.group_name, event)
+        async_to_sync(self.channel_layer.group_send)(self.room_name, event)
         
         
     # Online count handler

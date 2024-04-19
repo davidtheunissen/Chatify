@@ -3,7 +3,7 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from .forms import RegisterForm, ChatMessageForm
-from .models import ChatGroup, User
+from .models import Chatroom, User
 
 
 def login_user(request):
@@ -15,7 +15,7 @@ def login_user(request):
             user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
-                return redirect(index)
+                return redirect(profile, user)
     else:
         form = AuthenticationForm()
     return render(request, 'chat/login.html', {
@@ -28,7 +28,12 @@ def register_user(request):
         form = RegisterForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect(index)
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password1')
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                login(request, user)
+                return redirect(profile, user)
     else:
         form = RegisterForm()
     return render(request, 'chat/register.html', {
@@ -47,9 +52,11 @@ def index(request):
 
 def profile(request, username):
     users = User.objects.exclude(username=username)
+    rooms = Chatroom.objects.filter(is_private=False)
         
     context = {
         "users": users,
+        "rooms": rooms
     }
     return render(request, 'chat/profile.html', context)
 
@@ -60,34 +67,34 @@ def get_or_create_chatroom(request, username):
         return redirect(index)
     
     other_user = User.objects.get(username=username)
-    user_chatrooms = request.user.chat_groups.filter(is_private=True)
+    user_chatrooms = request.user.chat_rooms.filter(is_private=True)
     
     if user_chatrooms.exists():
-        for chatroom in user_chatrooms:
-            if other_user in chatroom.members.all():
-                chatroom = chatroom
+        for chat_room in user_chatrooms:
+            if other_user in chat_room.members.all():
+                chat_room = chat_room
                 break
             else:
-                chatroom = ChatGroup.objects.create(is_private=True)
-                chatroom.members.add(other_user, request.user)
+                chat_room = Chatroom.objects.create(is_private=True)
+                chat_room.members.add(other_user, request.user)
     else:
-        chatroom = ChatGroup.objects.create(is_private=True)
-        chatroom.members.add(other_user, request.user)
+        chat_room = Chatroom.objects.create(is_private=True)
+        chat_room.members.add(other_user, request.user)
         
-    return redirect(group, chatroom.groupName)
+    return redirect(chatroom, chat_room.name)
 
 
 @login_required
-def group(request, group_name):
-    chat_group = get_object_or_404(ChatGroup, groupName=group_name)
-    chat_messages = chat_group.chat_messages.all()
+def chatroom(request, room_name):
+    chat_room = get_object_or_404(Chatroom, name=room_name)
+    chat_messages = chat_room.chat_messages.all()
     form = ChatMessageForm()
     
     # Declare other user as none
     other_user = None
     # If chat is private, find other user and store it
-    if chat_group.is_private:
-        for member in chat_group.members.all():
+    if chat_room.is_private:
+        for member in chat_room.members.all():
             if member != request.user:
                 other_user = member
                 break
@@ -98,7 +105,7 @@ def group(request, group_name):
         if form.is_valid:
             message = form.save(commit=False)
             message.author = request.user
-            message.group = chat_group
+            message.group = chat_room
             message.save()
             
             # HTMX partial information
@@ -111,13 +118,13 @@ def group(request, group_name):
     
     # Context information
     context = {
-        "group_name": chat_group.groupName,
+        "room_name": chat_room.name,
         "chat_messages": chat_messages,
         "form": form,
         "other_user": other_user,
     }
     
-    return render(request, 'chat/group.html', context)
+    return render(request, 'chat/chatroom.html', context)
     
     
 # Test View

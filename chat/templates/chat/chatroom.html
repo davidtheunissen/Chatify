@@ -1,7 +1,7 @@
 {% extends 'chat/layout.html' %}
 {% load static %}
 
-{% block title %}Chat | {{ group_name }}{% endblock %}
+{% block title %}Chatify | {{ room_name }}{% endblock %}
 
 {% block body %}
 <section>
@@ -21,7 +21,7 @@
               {% else %}
                 <!-- Card Header -->
                 <div class="card-header d-flex justify-content-center text-white">
-                  <h1>{{ group_name }}</h1>
+                  <h1>{{ room_name }}</h1>
                 </div>
 
                 <!-- Online count -->
@@ -42,7 +42,7 @@
 
                 <div id="chat_message_box">
                   <!-- Message box -->
-                  <form hx-post="{% url 'group' group_name=group_name %}" hx-ext="ws" ws-connect="/ws/group/{{ group_name }}" ws-send _="on htmx:wsAfterSend reset() me">
+                  <form hx-post="{% url 'chatroom' room_name=room_name %}" hx-ext="ws" ws-connect="/ws/room/{{ room_name }}" ws-send _="on htmx:wsAfterSend reset() me">
                       {% csrf_token %}
                       {{ form }}
                   </form>

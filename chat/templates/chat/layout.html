@@ -8,7 +8,16 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
         <!-- Bootstrap CSS -->
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+        <!-- jQuery -->
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+
+        <!-- Popper.js -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+
+        <!-- Bootstrap JavaScript -->
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
         <!-- HTMX JavaScript library -->
         <script src="https://unpkg.com/htmx.org@latest/dist/htmx.min.js"></script>
@@ -25,35 +34,42 @@
     <body>
         <!-- Navbar -->
         <nav class="navbar bg-dark">
-            <div class="container-xxl">
-                <!-- Index item -->
-                <a href="{% url 'index' %}" class="navbar-brand">
-                    <span class="fw-bold text-white">
-                        Home
-                    </span>
-                </a>
+            <div class="container">
 
                 {% if user.is_authenticated %}
-                <!-- Logout item -->
-                <a href="{% url 'logout' %}" class="navbar-brand">
-                    <span class="fw-bold text-white">
-                        Logout
-                    </span>
-                </a>
+                <div class="col-6 d-flex justify-content-start">
+                    <!-- Profile item -->
+                    <a href="{% url 'profile' username=user %}" class="navbar-brand">
+                        <span class="fw-bold text-white">Home</span>
+                    </a>
+                </div>
+
+                <div class="col-6 d-flex justify-content-end">
+                    <!-- Logout item -->
+                    <a href="{% url 'logout' %}" class="navbar-brand">
+                        <span class="fw-bold text-white">Logout</span>
+                    </a>
+                </div>
+
                 {% else %}
-                <!-- Login item -->
-                <a href="{% url 'login' %}" class="navbar-brand">
-                    <span class="fw-bold text-white">
-                        Login
-                    </span>
-                </a>
-                
-                <!-- Register item -->
-                <a href="{% url 'register' %}" class="navbar-brand">
-                    <span class="fw-bold text-white">
-                        Register
-                    </span>
-                </a>
+                <div class="col-6 d-flex justify-content-start">
+                    <!-- Index item -->
+                    <a href="{% url 'index' %}" class="navbar-brand">
+                        <span class="fw-bold text-white">Home</span>
+                    </a>
+                </div>
+
+                <div class="col-6 d-flex justify-content-end">
+                    <!-- Login item -->
+                    <a href="{% url 'login' %}" class="navbar-brand px-2">
+                        <span class="fw-bold text-white">Login</span>
+                    </a>
+                    
+                    <!-- Register item -->
+                    <a href="{% url 'register' %}" class="navbar-brand px-2">
+                        <span class="fw-bold text-white">Register</span>
+                    </a>
+                </div>
                 {% endif %}
 
             </div>
