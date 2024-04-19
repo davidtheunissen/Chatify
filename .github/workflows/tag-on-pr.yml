@@ -1,0 +1,21 @@
+name: Create Tag on PR
+
+on:
+  pull_request:
+    types: [opened, reopened]
+
+jobs:
+  tag:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Create tag
+      run: |
+        PR_NUMBER=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
+        TAG="pr-${PR_NUMBER}-$(date +%s)"
+        git tag $TAG
+        git push origin $TAG
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
