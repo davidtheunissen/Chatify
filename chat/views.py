@@ -50,6 +50,7 @@ def index(request):
     return render(request, 'chat/index.html')
 
 
+@login_required
 def profile(request, username):
     users = User.objects.exclude(username=username)
     rooms = Chatroom.objects.filter(is_private=False)

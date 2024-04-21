@@ -5,56 +5,55 @@
 
 {% block body %}
 <section>
-
-    <div class="row">
-        <div class="col-12 d-flex justify-content-center">
-
+  <div class="row">
+      <div class="col-12 d-flex justify-content-center">
+        
           <!-- Card box-->
           <div class="card bg-dark" style="border-radius: 15px; width: 100rem;">
-
               {% if other_user %}
-                <!-- Card Header -->
-                <div class="card-header d-flex justify-content-center text-white">
+              <!-- Card Header -->
+              <div class="card-header d-flex justify-content-center text-white">
                   <h1>{{ other_user }}</h1>
-                </div>
+              </div>
 
               {% else %}
-                <!-- Card Header -->
-                <div class="card-header d-flex justify-content-center text-white">
+              <!-- Card Header -->
+              <div class="card-header d-flex justify-content-center text-white">
                   <h1>{{ room_name }}</h1>
-                </div>
+              </div>
 
-                <!-- Online count -->
-                <div class="card-header d-flex justify-content-center align-items-center py-0 text-info">
+              <!-- Online count -->
+              <div class="card-header d-flex justify-content-center align-items-center py-0 text-info">
                   {% include 'chat/partials/online_count_partial.html' %}
-                </div>
+              </div>
               {% endif %}
-
+              
               <!-- Card body -->
-              <div class="card-body flex-grow-1 overflow-auto bg-dark" style="height: 80vh; border-radius: 15px;" id="chat-box">
+              <div class="card-body d-flex flex-column bg-dark" style="height: 80vh; border-radius: 15px;">
 
-                <!-- Chat message box -->
-                <div id="chat_messages">
-                  {% for message in chat_messages reversed %}
-                    {% include 'chat/chat_message.html' %}
-                  {% endfor %}
-                </div>
+                  <!-- Chat message box -->
+                  <div class="flex-grow-1 overflow-auto" id="chat-box">
+                      <div id="chat_messages">
+                          {% for message in chat_messages reversed %}
+                          {% include 'chat/chat_message.html' %}
+                          {% endfor %}
+                      </div>
+                  </div>
 
-                <div id="chat_message_box">
                   <!-- Message box -->
-                  <form hx-post="{% url 'chatroom' room_name=room_name %}" hx-ext="ws" ws-connect="/ws/room/{{ room_name }}" ws-send _="on htmx:wsAfterSend reset() me">
-                      {% csrf_token %}
-                      {{ form }}
-                  </form>
-                </div>
+                  <div id="chat_message_box">
+                      <form hx-post="{% url 'chatroom' room_name=room_name %}" hx-ext="ws" ws-connect="/ws/room/{{ room_name }}" ws-send _="on htmx:wsAfterSend reset() me">
+                          {% csrf_token %}
+                          {{ form }}
+                      </form>
+                  </div>
 
               </div>
-              
           </div>
-        </div>
-    </div>
-
+      </div>
+  </div>
 </section>
+
 {% endblock %}
 
 
