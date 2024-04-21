@@ -20,5 +20,5 @@ class ChatMessageForm(ModelForm):
         model = ChatMessage
         fields = ['body']
         widgets = {
-            'body' : forms.TextInput(attrs={'class': 'form-control py-2 px-2', 'rows': '1', 'autofocus': True, 'placeholder': 'Type your message'})
+            'body': forms.TextInput(attrs={'class': 'form-control py-2 px-2', 'rows': '1', 'autofocus': True, 'placeholder': 'Type your message'})
         }

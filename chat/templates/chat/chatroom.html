@@ -27,7 +27,7 @@
                   {% include 'chat/partials/online_count_partial.html' %}
               </div>
               {% endif %}
-              
+
               <!-- Card body -->
               <div class="card-body d-flex flex-column bg-dark" style="height: 80vh; border-radius: 15px;">
 
@@ -44,7 +44,7 @@
                   <div id="chat_message_box">
                       <form hx-post="{% url 'chatroom' room_name=room_name %}" hx-ext="ws" ws-connect="/ws/room/{{ room_name }}" ws-send _="on htmx:wsAfterSend reset() me">
                           {% csrf_token %}
-                          {{ form }}
+                          {{ form.body }}
                       </form>
                   </div>
 
