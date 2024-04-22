@@ -1,0 +1,103 @@
+{% extends 'chat/layout.html' %}
+
+{% block body %}
+
+<section>
+
+    <div class="row">
+        <!-- Users title -->
+        <div class="col-12">
+            <h1>Users</h1>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <!-- List of users -->
+            <ul class="list-group">
+                {% for user in users %}
+                    <li class="list-group-item">
+                        <a href="{% url 'start-chatroom' username=user %}">
+                            <h5 class="text-dark" style="text-align: center">{{ user }}</h5>
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <br/>
+
+    <div class="row">
+        <!-- Groups title -->
+        <div class="col-12">
+            <h1>Groups</h1>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <!-- List of groups -->
+            <ul class="list-group">
+                {% for room in rooms %}
+                    <li class="list-group-item">
+                        <a href="{% url 'chatroom' room_name=room %}">
+                            <h5 class="text-dark" style="text-align: center">{{ room }}</h5>
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <div class="row justify-content-center my-2">
+        <!-- Create group button -->
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#create-group-modal">
+            Create New Group
+        </button>
+    </div>
+    
+    <!-- Modal -->
+    <div class="modal fade" id="create-group-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <!-- Modal title -->
+                <h5 class="modal-title">Create a New Group</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <form action="{% url 'create_group' %}" method="POST" id="group-create-form">
+                {% csrf_token %}
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <!-- Group name input-->
+                    <label for="group-name">Group Name</label>
+                    <input type="text" class="form-control" name="group-name" id="group-name" placeholder="Enter the group name">
+
+                    <br/>
+
+                    <!-- Members selection -->
+                    <label for="member-select">Members</label>
+                    <select name="member-select" id="member-select" class="form-control" multiple>
+                        {% for user in users %}
+                            <option value="{{ user.id }}">{{ user.username }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </form>
+        </div>
+        </div>
+  </div>
+
+</section>
+
+{% endblock %}
