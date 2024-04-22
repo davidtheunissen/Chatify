@@ -127,7 +127,25 @@ def chatroom(request, room_name):
     
     return render(request, 'chat/chatroom.html', context)
     
-    
+
+@login_required
+def create_group(request):
+    if request.method == "POST":
+        group_name = request.POST['group-name']
+        members = request.POST.getlist('member-select')
+        
+        print(group_name) # DEBUG
+        print(members) # DEBUG
+        
+        chat_group = Chatroom(name=group_name)
+        chat_group.save()
+        chat_group.members.set(members)
+        return redirect(chatroom, chat_group.name)
+    else:
+        username = request.user.username
+        return redirect(profile, username)
+
+
 # Test View
 def example(request):
     return
