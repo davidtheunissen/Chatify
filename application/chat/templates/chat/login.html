@@ -7,7 +7,14 @@
 {% block body %}
 
 <section id="main">
-    <h1>Login</h1>
+    <!-- Display alert if there is one -->
+    {% if message %}
+        <div class="alert alert-warning alert-dismissable fade show" role="alert">
+            {{ message }}
+        </div>
+    {% endif %}
+    
+    <h1 class="pt-5">Login</h1>
 
     <!-- Login form -->
     <form action="{% url 'login' %}" method="post">

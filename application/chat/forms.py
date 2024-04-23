@@ -22,3 +22,10 @@ class ChatMessageForm(ModelForm):
         widgets = {
             'body': forms.TextInput(attrs={'class': 'form-control py-2 px-2', 'rows': '1', 'autofocus': True, 'placeholder': 'Type your message'})
         }
+        
+        
+# Edit profile form
+class EditProfileForm(ModelForm):
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'email']

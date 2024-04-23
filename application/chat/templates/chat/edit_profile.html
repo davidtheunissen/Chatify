@@ -1,0 +1,35 @@
+{% extends 'chat/layout.html' %}
+{% load static %}
+
+{% block title %}Chatify | Profile - {{ user.username }}{% endblock %}
+
+{% load crispy_forms_tags %}
+
+{% block body %}
+<section id="main">
+    <!-- Display alert if there is one -->
+    {% if message %}
+        <div class="alert alert-warning alert-dismissable fade show" role="alert">
+            {{ message }}
+        </div>
+    {% endif %}
+
+    <div class="row pt-5">
+        <h1>Edit Your Profile</h1>
+    </div>
+
+    <div class="row">
+        <form action="{% url 'edit_profile' %}" method="POST">
+            {% csrf_token %}
+
+            <!-- Form with Crispy Forms -->
+            {{ form|crispy }}
+
+            <!-- Submit button -->
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+
+</section>
+
+{% endblock %}

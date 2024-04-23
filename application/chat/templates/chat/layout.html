@@ -10,6 +10,9 @@
         <!-- Bootstrap CSS -->
         <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
+        <!-- Bootstrap Icons CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
         <!-- jQuery -->
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 
@@ -45,6 +48,12 @@
                 </div>
 
                 <div class="col-6 d-flex justify-content-end">
+                    <!-- Profile info item -->
+                    <a href="{% url 'edit_profile' %}" class="navbar-brand px-2">
+                        <i class="bi bi-person-circle text-white"></i>
+                        <span class="fw-bold text-white">{{ user.username }}</span>
+                    </a>
+
                     <!-- Logout item -->
                     <a href="{% url 'logout' %}" class="navbar-brand">
                         <span class="fw-bold text-white">Logout</span>
@@ -76,18 +85,8 @@
         </nav>
 
         <!-- Body block -->
-        <div class="container py-5">
+        <div class="container">
             {% block body %}
-
-            <!-- Display alert if there is one -->
-            {% if messages %}
-                {% for message in messages %}
-                    <div class="alert alert-warning alert-dismissable fade show" role="alert">
-                        {{ message }}
-                    </div>
-                {% endfor %}
-            {% endif %}
-
             {% endblock %}
         </div>
 

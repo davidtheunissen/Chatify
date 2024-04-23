@@ -5,27 +5,29 @@
 
 {% block body %}
 <section>
-  <div class="row">
+  <div class="row pt-5">
       <div class="col-12 d-flex justify-content-center">
         
           <!-- Card box-->
           <div class="card bg-dark" style="border-radius: 15px; width: 100rem;">
               {% if other_user %}
-              <!-- Card Header -->
-              <div class="card-header d-flex justify-content-center text-white">
-                  <h1>{{ other_user }}</h1>
-              </div>
+                <!-- Card Header -->
+                <div class="card-header d-flex justify-content-center text-white">
+                    <h1>{{ other_user }}</h1>
+                </div>
 
               {% else %}
-              <!-- Card Header -->
-              <div class="card-header d-flex justify-content-center text-white">
-                  <h1>{{ room_name }}</h1>
-              </div>
+                <!-- Card Header -->
+                <div class="card-header d-flex justify-content-between align-items-center text-white">
+                    <h1>{{ room_name }}</h1>
+                    <i class="bi bi-gear text-light" style="font-size: 1.5rem">
+                    </i>
+                </div>
 
-              <!-- Online count -->
-              <div class="card-header d-flex justify-content-center align-items-center py-0 text-info">
-                  {% include 'chat/partials/online_count_partial.html' %}
-              </div>
+                <!-- Online count -->
+                <div class="card-header d-flex justify-content-center align-items-center py-0 text-info">
+                    {% include 'chat/partials/online_count_partial.html' %}
+                </div>
               {% endif %}
 
               <!-- Card body -->
@@ -35,7 +37,7 @@
                   <div class="flex-grow-1 overflow-auto" id="chat-box">
                       <div id="chat_messages">
                           {% for message in chat_messages reversed %}
-                          {% include 'chat/chat_message.html' %}
+                            {% include 'chat/chat_message.html' %}
                           {% endfor %}
                       </div>
                   </div>
