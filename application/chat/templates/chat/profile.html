@@ -3,7 +3,7 @@
 {% block title %}Chatify | {{ user.username }}{% endblock %}
 
 {% block body %}
-<section>
+<section id="users">
 
     <div class="row pt-5">
         <!-- Users title -->
@@ -27,7 +27,12 @@
         </div>
     </div>
 
-    <br/>
+</section>
+
+<br>
+<br>
+
+<section id="groups">
 
     <div class="row">
         <!-- Groups title -->
@@ -43,7 +48,7 @@
                 {% for room in public_rooms %}
                     <li class="list-group-item">
                         <a href="{% url 'chatroom' room_name=room %}">
-                            <h5 class="text-dark" style="text-align: center">{{ room }}</h5>
+                            <h5 class="text-dark" style="text-align: center">{{ room.title }}</h5>
                         </a>
                     </li>
                 {% endfor %}
@@ -51,7 +56,7 @@
                 {% for group in user_groups %}
                     <li class="list-group-item">
                         <a href="{% url 'chatroom' room_name=group %}">
-                            <h5 class="text-dark" style="text-align: center">{{ group }}</h5>
+                            <h5 class="text-dark" style="text-align: center">{{ group.title }}</h5>
                         </a>
                     </li>
                 {% endfor %}

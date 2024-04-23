@@ -122,15 +122,14 @@ def get_or_create_chatroom(request, username):
     user_chatrooms = request.user.chat_rooms.filter(is_private=True, is_group=False)
     
     if user_chatrooms.exists():
-        for chat_room in user_chatrooms:
-            if other_user in chat_room.members.all():
-                chat_room = chat_room
-                break
-            else:
-                chat_room = Chatroom.objects.create(is_private=True)
-                chat_room.members.add(other_user, request.user)
+        for user_chat_room in user_chatrooms:
+            if other_user in user_chat_room.members.all():
+                return redirect(chatroom, user_chat_room.name)
+            
+        chat_room = Chatroom.objects.create(is_private=True, title=f"{request.user}-{other_user}")
+        chat_room.members.add(other_user, request.user)
     else:
-        chat_room = Chatroom.objects.create(is_private=True)
+        chat_room = Chatroom.objects.create(is_private=True, title=f"{request.user}-{other_user}")
         chat_room.members.add(other_user, request.user)
         
     return redirect(chatroom, chat_room.name)
@@ -139,13 +138,12 @@ def get_or_create_chatroom(request, username):
 @login_required
 def chatroom(request, room_name):
     chat_room = get_object_or_404(Chatroom, name=room_name)
-    print(chat_room)
     chat_messages = chat_room.chat_messages.all()
     form = ChatMessageForm()
     
     # Declare other user as none
     other_user = None
-    # If chat is private, find other user and store it
+    # If chat is private and not a group, find other user and store it
     if chat_room.is_private and not chat_room.is_group:
         for member in chat_room.members.all():
             if member != request.user:
@@ -171,7 +169,7 @@ def chatroom(request, room_name):
     
     # Context information
     context = {
-        "room_name": chat_room.name,
+        "room": chat_room,
         "chat_messages": chat_messages,
         "form": form,
         "other_user": other_user,
@@ -183,13 +181,13 @@ def chatroom(request, room_name):
 @login_required
 def create_group(request):
     if request.method == "POST":
-        group_name = request.POST['group-name']
+        group_title = request.POST['group-name']
         members = request.POST.getlist('member-select')
         members.append(request.user)
         is_private = request.POST['private-group']
         
         chat_group = Chatroom(
-            name=group_name,
+            title=group_title,
             owner=request.user,
             is_private=is_private,
             is_group=True
