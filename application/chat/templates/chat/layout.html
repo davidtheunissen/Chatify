@@ -7,6 +7,8 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+        <title>{% block title %}{% endblock %}</title>
+
         <!-- Bootstrap CSS -->
         <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
@@ -31,10 +33,10 @@
         <!-- Hyperscript library -->
         <script src="https://unpkg.com/hyperscript.org@0.9.12"></script>
 
-        <title>{% block title %}{% endblock %}</title>
+        {% block script %}{% endblock %}
     </head>
 
-    <body>
+    <body class="bg-light">
         <!-- Navbar -->
         <nav class="navbar bg-dark">
             <div class="container">
@@ -92,6 +94,10 @@
 
         <!-- Javascript block -->
         {% block javascript %}
+        {% endblock %}
+
+        <!-- CSS block -->
+        {% block css %}
         {% endblock %}
     </body>
 

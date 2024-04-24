@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+
 from .forms import RegisterForm, ChatMessageForm, EditProfileForm
 from .models import Chatroom, User
 
@@ -77,20 +79,15 @@ def edit_profile(request):
     if request.method == "POST":
         form = EditProfileForm(request.POST)
         if form.is_valid():
-            if request.POST['first_name'] == '':
-                first_name = request.user.first_name
-            else:
-                first_name = request.POST['first_name']
-                
-            if request.POST['last_name'] == '':
-                last_name = request.user.last_name
-            else:
-                last_name = request.POST['last_name']
-                
-            if request.POST['email'] == '':
-                email = request.user.email
-            else:
-                email = request.POST['email']
+            # Get the values from the form or use the current user's values if the fields are empty
+            first_name = request.POST.get('first_name', None)
+            last_name = request.POST.get('last_name', None)
+            email = request.POST.get('email', None)
+
+            # If a field is empty, retain the original value
+            first_name = first_name or request.user.first_name
+            last_name = last_name or request.user.last_name
+            email = email or request.user.email
             
             request.user.first_name = first_name
             request.user.last_name = last_name

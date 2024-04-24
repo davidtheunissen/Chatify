@@ -13,7 +13,6 @@ urlpatterns = [
     path('start/<str:username>', views.get_or_create_chatroom, name="start-chatroom"),
     path('create_group/', views.create_group, name="create_group"),
     
-    
     # Test Path
     path('example/', views.example, name="example"),
 ]
