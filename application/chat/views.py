@@ -181,7 +181,8 @@ def create_group(request):
         group_title = request.POST['group-name']
         members = request.POST.getlist('member-select')
         members.append(request.user)
-        is_private = request.POST['private-group']
+        is_private = request.POST.get('private-group', '')
+        is_private = is_private == 'true'
         
         chat_group = Chatroom(
             title=group_title,

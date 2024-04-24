@@ -22,7 +22,6 @@
                         <h1>{{ other_user }}</h1>
                     {% endif %}
                 </div>
-
               {% else %}
                 <!-- Card Header -->
                 <div class="card-header d-flex justify-content-between align-items-center text-white">
@@ -49,7 +48,7 @@
                   </div>
 
                   <!-- Message box -->
-                  <div id="chat_message_box">
+                  <div id="chat-message-box">
                       <form hx-post="{% url 'chatroom' room_name=room.name %}" hx-ext="ws" ws-connect="/ws/room/{{ room.name }}" ws-send _="on htmx:wsAfterSend reset() me">
                           {% csrf_token %}
                           {{ form.body }}
