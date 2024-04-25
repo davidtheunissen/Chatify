@@ -146,6 +146,10 @@ def chatroom(request, room_name):
             if member != request.user:
                 other_user = member
                 break
+            
+    online_count = chat_room.usersOnline.count() - 1
+    if online_count < 0:
+        online_count = 0
     
     # If message is sent, create a HTMX partial and append it to the view
     if request.method == "POST":
@@ -170,6 +174,7 @@ def chatroom(request, room_name):
         "chat_messages": chat_messages,
         "form": form,
         "other_user": other_user,
+        "online_count": online_count,
     }
     
     return render(request, 'chat/chatroom.html', context)

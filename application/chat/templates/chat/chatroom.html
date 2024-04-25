@@ -1,4 +1,5 @@
 {% extends 'chat/layout.html' %}
+{% load static %}
 
 {% block title %}Chatify | {{ room_name }}{% endblock %}
 
@@ -30,7 +31,7 @@
 
                 <!-- Online count -->
                 <div class="card-header d-flex justify-content-center align-items-center py-0 text-info">
-                    {% include 'chat/partials/online_count_partial.html' %}
+                    <span id="online-count">{{ online_count }} online</span>
                 </div>
               {% endif %}
 
