@@ -45,7 +45,7 @@
                             <!-- Message on left side if from user -->
                             {% if message.author == user %}
                                 <div class="d-flex justify-content-end my-2">
-                                    <div class="bg-primary text-white pt-3 px-2" style="border-radius: 15px; max-width: fit-content;">
+                                    <div class="bg-primary text-white pt-3 px-2" id="message-db" style="border-radius: 15px; max-width: fit-content;">
                                         <p>{{ message.body }}</p>
                                     </div>
                                 </div>
@@ -54,14 +54,14 @@
                             {% else %}
                                 {% if room.is_group %}
                                     <div class="d-flex justify-content-start my-2">
-                                        <div class="bg-light text-dark pt-3 px-2" style="border-radius: 15px; max-width: fit-content;">
+                                        <div class="bg-light text-dark pt-3 px-2" id="message-db" style="border-radius: 15px; max-width: fit-content;">
                                             <h5>{{ message.author }}</h5>
                                             <p>{{ message.body }}</p>
                                         </div>
                                     </div>
                                 {% else %}
                                     <div class="d-flex justify-content-start my-2">
-                                        <div class="bg-light text-dark pt-3 px-2" style="border-radius: 15px; max-width: fit-content;">
+                                        <div class="bg-light text-dark pt-3 px-2" id="message-db" style="border-radius: 15px; max-width: fit-content;">
                                             <p>{{ message.body }}</p>
                                         </div>
                                     </div>
@@ -75,7 +75,9 @@
                   <div id="chat-message-box">
                       <form id="message-box-input">
                           {% csrf_token %}
+                          <!-- Message box custom form -->
                           {{ form.body }}
+                          <!-- Hidden input for context in JavaScript -->
                           <input type="hidden" id="roomNameInput" value="{{ room.name }}">
                           <input type="hidden" id="currentUser" value="{{ request.user.username }}">
                           <input type="hidden" id="isGroup" value="{{ room.is_group }}">

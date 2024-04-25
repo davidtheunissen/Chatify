@@ -39,6 +39,7 @@ class RoomConsumer(WebsocketConsumer):
         if self.user in self.chatroom.usersOnline.all():
             self.chatroom.usersOnline.remove(self.user)
             self.update_online_count()
+            self.chatroom.save()
             
         
     # Receive message on group and send to channel layer

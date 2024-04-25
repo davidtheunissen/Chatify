@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (data.author === currentUser) {
             messageHTML = `
             <div class="d-flex justify-content-end my-2">
-                <div class="bg-primary text-white pt-3 px-2 fade-in" style="border-radius: 15px; max-width: fit-content;">
+                <div class="bg-primary text-white pt-3 px-2 fade-in-up" id="message-new" style="border-radius: 15px; max-width: fit-content;">
                     <p>${data.message}</p>
                 </div>
             </div>`;
@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (isGroup === 'True') {
                 messageHTML = `
                 <div class="d-flex justify-content-start my-2">
-                    <div class="bg-light text-dark pt-3 px-2 fade-in-up" style="border-radius: 15px; max-width: fit-content;">
+                    <div class="bg-light text-dark pt-3 px-2 fade-in-up" id="message-new" style="border-radius: 15px; max-width: fit-content;">
                         <h5>${data.author}</h5>
                         <p>${data.message}</p>
                     </div>
@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 messageHTML = `
                 <div class="d-flex justify-content-start my-2">
-                    <div class="bg-light text-dark pt-3 px-2 fade-in-up" style="border-radius: 15px; max-width: fit-content;">
+                    <div class="bg-light text-dark pt-3 px-2 fade-in-up" id="message-new" style="border-radius: 15px; max-width: fit-content;">
                         <p>${data.message}</p>
                     </div>
                 </div>`;
@@ -49,6 +49,14 @@ document.addEventListener('DOMContentLoaded', function() {
         };
         chatMessages.innerHTML += messageHTML;
         scrollToBottom();
+
+        // Take fade in property out of messages after they've been displayed
+        setTimeout(() => {
+            const newMessages = document.querySelectorAll('#message-new');
+            newMessages.forEach(message => {
+                message.classList.remove('fade-in-up');
+            });
+        }, 500);
     };
 
 
@@ -58,10 +66,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const isGroup = document.getElementById('isGroup').value;
     socket = new WebSocket("ws://" + window.location.host + "/ws/room/" + roomName + "/");
     
+
     // Open WebSocket handler
     socket.onopen = function(event) {
         console.log('WebSocket connection established.');
     };
+
 
     // Message send handler
     const form = document.getElementById('message-box-input');
@@ -79,6 +89,7 @@ document.addEventListener('DOMContentLoaded', function() {
         scrollToBottom();
     });
     
+
     // Message receive handler
     socket.onmessage = function(event) {
         const data = JSON.parse(event.data);
