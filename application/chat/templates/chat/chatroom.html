@@ -1,5 +1,4 @@
 {% extends 'chat/layout.html' %}
-{% load static %}
 
 {% block title %}Chatify | {{ room_name }}{% endblock %}
 
@@ -40,18 +39,45 @@
 
                   <!-- Chat message box -->
                   <div class="flex-grow-1 overflow-auto" id="chat-box">
-                      <div id="chat_messages">
+                      <div id="chat-messages">
                           {% for message in chat_messages reversed %}
-                            {% include 'chat/chat_message.html' %}
+                            <!-- Message on left side if from user -->
+                            {% if message.author == user %}
+                                <div class="d-flex justify-content-end my-2">
+                                    <div class="bg-primary text-white pt-3 px-2" style="border-radius: 15px; max-width: fit-content;">
+                                        <p>{{ message.body }}</p>
+                                    </div>
+                                </div>
+
+                            <!-- Message on right side if not from user -->
+                            {% else %}
+                                {% if room.is_group %}
+                                    <div class="d-flex justify-content-start my-2">
+                                        <div class="bg-light text-dark pt-3 px-2" style="border-radius: 15px; max-width: fit-content;">
+                                            <h5>{{ message.author }}</h5>
+                                            <p>{{ message.body }}</p>
+                                        </div>
+                                    </div>
+                                {% else %}
+                                    <div class="d-flex justify-content-start my-2">
+                                        <div class="bg-light text-dark pt-3 px-2" style="border-radius: 15px; max-width: fit-content;">
+                                            <p>{{ message.body }}</p>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            {% endif %}
                           {% endfor %}
                       </div>
                   </div>
 
                   <!-- Message box -->
                   <div id="chat-message-box">
-                      <form hx-post="{% url 'chatroom' room_name=room.name %}" hx-ext="ws" ws-connect="/ws/room/{{ room.name }}" ws-send _="on htmx:wsAfterSend reset() me">
+                      <form id="message-box-input">
                           {% csrf_token %}
                           {{ form.body }}
+                          <input type="hidden" id="roomNameInput" value="{{ room.name }}">
+                          <input type="hidden" id="currentUser" value="{{ request.user.username }}">
+                          <input type="hidden" id="isGroup" value="{{ room.is_group }}">
                       </form>
                   </div>
 

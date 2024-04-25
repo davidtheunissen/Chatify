@@ -14,14 +14,15 @@ class RoomConsumer(WebsocketConsumer):
         
         # Add user to group channel layer method
         async_to_sync(self.channel_layer.group_add)(
-            self.room_name, self.channel_name
+            self.room_name,
+            self.channel_name
         )
         
         # Update online users' count and add user from 'userOnline' list
-        if self.user not in self.chatroom.usersOnline.all():
+        """if self.user not in self.chatroom.usersOnline.all():
             self.chatroom.usersOnline.add(self.user)
-            self.update_online_count()
-            self.chatroom.save()
+            # self.update_online_count()
+            self.chatroom.save()"""
             
         
         self.accept()
@@ -31,16 +32,17 @@ class RoomConsumer(WebsocketConsumer):
     def disconnect(self, close_code):
         # Remove user from group channel layer method
         async_to_sync(self.channel_layer.group_discard)(
-            self.room_name, self.channel_name
+            self.room_name,
+            self.channel_name
         )
         
         # Update online users' count and remove user from 'userOnline' list
-        if self.user in self.chatroom.usersOnline.all():
+        """if self.user in self.chatroom.usersOnline.all():
             self.chatroom.usersOnline.remove(self.user)
-            self.update_online_count()
+            self.update_online_count()"""
             
         
-    # Receive message on group and broadcast
+    # Receive message on group and send to channel layer
     def receive(self, text_data):
         text_data_json = json.loads(text_data)
         body = text_data_json['body']
@@ -58,26 +60,25 @@ class RoomConsumer(WebsocketConsumer):
         }
         # Broadcast text data to channel group
         async_to_sync(self.channel_layer.group_send)(
-            self.room_name, event
+            self.room_name,
+            event
         )
         
     
-    # Message handler
+    # Message handler that broadcasts it to the group
     def message_handler(self, event):
         message_id = event['message_id']
         message = ChatMessage.objects.get(id=message_id)
-        # Create context dictionary
-        context = {
-            'message': message,
-            'author': self.user,
-            'user': self.user
-        }
-        # Send text data to front end
-        html = render_to_string("chat/partials/chat_message_partial.html", context=context)
-        self.send(text_data=html)
+        
+        # Send message data as JSON
+        self.send(text_data=json.dumps({
+            'message': message.body,
+            'author': message.author.username,
+            'user': self.user.username
+        }))
         
         
-    # Update the online count on users' screens
+    """# Update the online count on users' screens
     def update_online_count(self):
         online_count = self.chatroom.usersOnline.count() - 1
         
@@ -93,4 +94,4 @@ class RoomConsumer(WebsocketConsumer):
     def online_count_handler(self, event):
         online_count = event['online_count']
         html = render_to_string("chat/partials/online_count_partial.html", {'online_count': online_count})
-        self.send(text_data=html)
+        self.send(text_data=html)"""
